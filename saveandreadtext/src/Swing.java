@@ -18,7 +18,8 @@ public class Swing implements ActionListener {
     private int WIDTH=800;
     private int HEIGHT=700;
     private JScrollPane scrollPane;
-    private JTextArea link, term, result;
+    public JTextArea link, term, result;
+    public JFrame photoresult;
     public boolean working = false;
 
 
@@ -184,7 +185,10 @@ public class Swing implements ActionListener {
                 //scrollPane.add();
                 //.setText(HtmlRead(url, contains));
                 //System.out.println(HtmlRead(url, contains));
+                System.out.println("button clicked");
+                System.out.println("Input: " + link.getText());
                 working = true;
+                //System.out.println(working);
             }
         }
     }

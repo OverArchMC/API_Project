@@ -30,9 +30,16 @@ import org.json.simple.parser.ParseException;
             // To print in JSON format.
             System.out.print(file.get("Tution Fees"));
             layout = new Swing();
+            //System.out.println("no way");
             while(true){
                 if(layout.working){
+                    //System.out.println("got here");
                     pull();
+                    layout.working = false;
+                    break;
+                }else{
+                    //System.out.println(layout.working);
+                    System.out.print("");
                 }
             }
 
@@ -44,7 +51,9 @@ import org.json.simple.parser.ParseException;
             String output = "abc";
             String totlaJson="";
             try {
-                String pokemon = "https://pokeapi.co/api/v2/pokemon/" + layout.ta2.toString();
+                String pokemon = "https://pokeapi.co/api/v2/pokemon/" + layout.link.getText();
+                //System.out.println("testing");
+                //System.out.println(layout.link.getText());
                 URL url = new URL(pokemon);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("GET");
@@ -62,16 +71,18 @@ import org.json.simple.parser.ParseException;
 
                 System.out.println("Output from Server .... \n");
                 while ((output = br.readLine()) != null) {
-                    System.out.println(output);
+                    //System.out.println(output);
                     totlaJson+=output;
                 }
 
                 conn.disconnect();
 
             } catch (MalformedURLException e) {
+                //System.out.println("catch got ran");
                 e.printStackTrace();
 
             } catch (IOException e) {
+                //System.out.println("ioexception");
                 e.printStackTrace();
             }
 
@@ -103,7 +114,7 @@ import org.json.simple.parser.ParseException;
 
 
 
-            layout.working = false;
+            //layout.working = false;
         }
 
     public static void realPull() throws ParseException {
