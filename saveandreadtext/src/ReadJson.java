@@ -1,10 +1,17 @@
 import java.awt.event.KeyEvent;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
+import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.*;
+
+
+
+//import com.*;
 
 
 // video to load jar
@@ -14,10 +21,14 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import javax.imageio.ImageIO;
+
 // Program for print data in JSON format.
     public class ReadJson {
-        public static Swing layout;
-        public static void main(String args[]) throws ParseException {
+
+    public static Swing layout;
+    public static ArrayList<String> facts;
+    public static void main(String args[]) throws ParseException {
             // In java JSONObject is used to create JSON object
             // which is a subclass of java.util.HashMap.
 
@@ -26,6 +37,7 @@ import org.json.simple.parser.ParseException;
             file.put("Roll No.", new Integer(1704310046));
             file.put("Tution Fees", new Double(65400));
 
+            facts = new ArrayList<String>();
 
             // To print in JSON format.
             System.out.print(file.get("Tution Fees"));
@@ -36,7 +48,7 @@ import org.json.simple.parser.ParseException;
                     //System.out.println("got here");
                     pull();
                     layout.working = false;
-                    break;
+                    //break;
                 }else{
                     //System.out.println(layout.working);
                     System.out.print("");
@@ -51,7 +63,7 @@ import org.json.simple.parser.ParseException;
             String output = "abc";
             String totlaJson="";
             try {
-                String pokemon = "https://pokeapi.co/api/v2/pokemon/" + layout.link.getText();
+                String pokemon = "https://pokeapi.co/api/v2/pokemon/" + layout.link.getText().toLowerCase();
                 //System.out.println("testing");
                 //System.out.println(layout.link.getText());
                 URL url = new URL(pokemon);
@@ -93,19 +105,54 @@ import org.json.simple.parser.ParseException;
 
             try {
                 System.out.println(jsonObject.get("name"));
+                String pokemonName = jsonObject.get("name").toString();
+                pokemonName = pokemonName.substring(0, 1).toUpperCase() + pokemonName.substring(1);
+                String finalResult = "Pokemon name: " + pokemonName;
+
 
                 org.json.simple.JSONArray msg = (org.json.simple.JSONArray) jsonObject.get("abilities");
+                finalResult += "\n\n" + pokemonName + "'s abilities:";
                 int n =   msg.size(); //(msg).length();
                 for (int i = 0; i < n; i++) {
                     //String test =(String) msg.get(i).toString();
                     org.json.simple.JSONObject test = (org.json.simple.JSONObject) msg.get(i);
                     org.json.simple.JSONObject test2 = (org.json.simple.JSONObject) test.get("ability");
                     String abilityName = (String) test2.get("name");
+                    finalResult += "\n" + abilityName;
                     System.out.println(abilityName);
                    // System.out.println(person.getInt("key"));
                 }
                 String name= (String)jsonObject.get("height").toString();
+                finalResult += "\n\n" + pokemonName + "'s height: " + jsonObject.get("height").toString();
                 System.out.println(name);
+                String linktoimg = (String)((HashMap<Object, Object>)jsonObject.get("sprites")).get("front_default");
+                System.out.println(linktoimg);
+
+                org.json.simple.JSONArray indexes = (org.json.simple.JSONArray) jsonObject.get("game_indices");
+                org.json.simple.JSONObject specificindex = (org.json.simple.JSONObject) indexes.get(indexes.size()-1);
+                Long index = (Long) specificindex.get("game_index");
+                System.out.println(index);
+
+                finalResult += "\n\n" + "If you want to see " + pokemonName + " for yourself, go to this link: " + linktoimg;
+
+                finalResult += "\n\n" + pokemonName + "'s Pokedex index: " + index;
+                // numbers stuff
+                String numberfact = realPull(index);
+                int count = 0;
+                while(facts.contains(numberfact) && count < 20){
+                    numberfact = realPull(index);
+                    count++;
+                }
+                facts.add(numberfact);
+                if(count >= 20){
+                    finalResult += "\n\nYou already seem to know quite a bit about the number " + index + ".";
+                }else{
+                    finalResult += "\n\n" + numberfact;
+                }
+                System.out.println(numberfact);
+
+
+                layout.result.setText(finalResult);
             }
 
             catch (Exception e) {
@@ -117,12 +164,12 @@ import org.json.simple.parser.ParseException;
             //layout.working = false;
         }
 
-    public static void realPull() throws ParseException {
+    public static String realPull(Long index) throws ParseException {
         String output = "abc";
         String totlaJson="";
         try {
 
-            URL url = new URL("https://pokeapi.co/api/v2/pokemon/ditto");
+            URL url = new URL("http://numbersapi.com/" + index.toString());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "application/json");
@@ -137,9 +184,9 @@ import org.json.simple.parser.ParseException;
                     (conn.getInputStream())));
 
 
-            System.out.println("Output from Server .... \n");
+            //System.out.println("Output from Server .... \n");
             while ((output = br.readLine()) != null) {
-                System.out.println(output);
+                //System.out.println(output);
                 totlaJson+=output;
             }
 
@@ -152,33 +199,13 @@ import org.json.simple.parser.ParseException;
             e.printStackTrace();
         }
 
-        JSONParser parser = new JSONParser();
+        //JSONParser parser = new JSONParser();
         //System.out.println(str);
-        org.json.simple.JSONObject jsonObject = (org.json.simple.JSONObject) parser.parse(totlaJson);
-        System.out.println("hi " + jsonObject);
-
-        try {
-            System.out.println(jsonObject.get("name"));
-
-            org.json.simple.JSONArray msg = (org.json.simple.JSONArray) jsonObject.get("abilities");
-            int n =   msg.size(); //(msg).length();
-            for (int i = 0; i < n; i++) {
-                //String test =(String) msg.get(i).toString();
-                org.json.simple.JSONObject test = (org.json.simple.JSONObject) msg.get(i);
-                org.json.simple.JSONObject test2 = (org.json.simple.JSONObject) test.get("ability");
-                String abilityName = (String) test2.get("name");
-                System.out.println(abilityName);
-                // System.out.println(person.getInt("key"));
-            }
-            String name= (String)jsonObject.get("height").toString();
-            System.out.println(name);
-        }
-
-        catch (Exception e) {
-            e.printStackTrace();
-        }
+        //org.json.simple.JSONObject jsonObject = (org.json.simple.JSONObject) parser.parse(totlaJson);
+        //System.out.println("hi " + jsonObject);
 
 
+        return totlaJson;
 
 
     }

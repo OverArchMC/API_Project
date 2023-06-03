@@ -20,6 +20,7 @@ public class Swing implements ActionListener {
     private JScrollPane scrollPane;
     public JTextArea link, term, result;
     public JFrame photoresult;
+    public ImageIcon actualImage;
     public boolean working = false;
 
 
@@ -124,11 +125,15 @@ public class Swing implements ActionListener {
         //mainFrame.add(scrollPane);
         //mainFrame.add(statusLabel);
 
-
+        //will be replaced with image code
         result = new JTextArea();
         result.setLineWrap(true); // ~
         result.setEditable(false);
         scrollPane = new JScrollPane(result);
+
+        /*
+        actualImage = new ImageIcon(
+         */
 
 
 
