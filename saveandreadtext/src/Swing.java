@@ -100,7 +100,7 @@ public class Swing implements ActionListener {
         retrieveButton.setActionCommand("Retrieve");
         retrieveButton.addActionListener(new ButtonClickListener());
         border.add(retrieveButton, BorderLayout.SOUTH);
-        border.add(new JLabel("Input:", SwingConstants.CENTER), BorderLayout.NORTH);
+        border.add(new JLabel("Name a pokemon:", SwingConstants.CENTER), BorderLayout.NORTH);
 
 
         JPanel spacer = new JPanel(new GridLayout(2, 1)); // [1]
@@ -114,7 +114,7 @@ public class Swing implements ActionListener {
         input.add(term, BorderLayout.CENTER);
         input.add(new JLabel("Secondary Input:", SwingConstants.CENTER), BorderLayout.NORTH);
         spacer.add(link);
-        spacer.add(input);
+        //spacer.add(input);
         spacer.setBounds(0, 0, 800, 100);
         border.add(spacer, BorderLayout.CENTER);
 
